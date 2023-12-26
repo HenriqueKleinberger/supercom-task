@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using SupercomTask.DTO;
 using SupercomTask.Constants;
 using System.Text;
+using SupercomTaskTests.Utils;
 
 namespace SupercomTaskTests.Controllers.CardControllerTests
 {
@@ -42,7 +43,7 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
             string responseBody = await response.Content.ReadAsStringAsync();
             CardDTO cardInserted = JsonConvert.DeserializeObject<CardDTO>(responseBody);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            AssertEquals(cardInserted, cardDTO);
+            AssertObjects.AssertEquals(cardInserted, cardDTO);
         }
 
         [Fact]
@@ -82,12 +83,6 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        private void AssertEquals(CardDTO expected, CardDTO actual)
-        {
-            Assert.Equal(expected.Status, actual.Status);
-            Assert.Equal(expected.Title, actual.Title);
-            Assert.True(DateTime.Equals(expected.DeadLine, actual.DeadLine));
-            // AJUSTAR Assert.True(DateTime.Equals(expected.CreatedAt, actual.CreatedAt));
-        }
+        
     }
 }
