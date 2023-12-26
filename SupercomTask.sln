@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupercomTask", "SupercomTask\SupercomTask.csproj", "{32CF6898-DFCC-477A-9640-52151D5E628D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SupercomTask", "SupercomTask\SupercomTask.csproj", "{32CF6898-DFCC-477A-9640-52151D5E628D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupercomTaskTests", "SupercomTaskTests\SupercomTaskTests.csproj", "{FDF16A63-B100-4238-804E-CAC69CE5E6BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{32CF6898-DFCC-477A-9640-52151D5E628D} = {32CF6898-DFCC-477A-9640-52151D5E628D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{32CF6898-DFCC-477A-9640-52151D5E628D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32CF6898-DFCC-477A-9640-52151D5E628D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32CF6898-DFCC-477A-9640-52151D5E628D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDF16A63-B100-4238-804E-CAC69CE5E6BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDF16A63-B100-4238-804E-CAC69CE5E6BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDF16A63-B100-4238-804E-CAC69CE5E6BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDF16A63-B100-4238-804E-CAC69CE5E6BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

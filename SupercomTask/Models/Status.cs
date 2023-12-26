@@ -5,5 +5,6 @@
         public int StatusId { get; set; }
 
         public String Name { get; set; }
+
     }
 }
