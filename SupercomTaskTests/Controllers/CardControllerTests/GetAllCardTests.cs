@@ -9,6 +9,7 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
 {
     public class GetAllCardTests
     {
+        public const string GET_ALL = "/cards";
 
         [Fact]
         public async Task ShouldGetAllCards()
@@ -48,7 +49,7 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
             // act
 
             using var client = application.CreateClient();
-            using var response = await client.GetAsync("/Card");
+            using var response = await client.GetAsync(GET_ALL);
 
             // assert
             string responseBody = await response.Content.ReadAsStringAsync();

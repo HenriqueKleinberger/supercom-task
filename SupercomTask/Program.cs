@@ -6,10 +6,18 @@ using SupercomTask.DAL.Interfaces;
 using SupercomTask.Models;
 using SupercomTask.Utils.Time.Interfaces;
 using SupercomTask.Utils.Time;
+using FluentValidation;
+using System;
+using SupercomTask.DTO;
+using SupercomTask.Validators;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddMvc();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SuperComTaskContext>(options => options.UseSqlServer(
@@ -20,6 +28,7 @@ builder.Services.AddScoped<ICardDAL, CardDAL>();
 builder.Services.AddScoped<IStatusDAL, StatusDAL>();
 builder.Services.AddScoped<ICardBLL, CardBLL>();
 builder.Services.AddScoped<ITimeHelper, TimeHelper>();
+builder.Services.AddValidatorsFromAssemblyContaining<CardDTOValidator>();
 
 var app = builder.Build();
 
@@ -31,8 +40,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-//app.UseAuthorization();
 
 app.MapControllers();
 

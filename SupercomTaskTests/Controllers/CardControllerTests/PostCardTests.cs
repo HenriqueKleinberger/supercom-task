@@ -11,7 +11,7 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
 {
     public class PostCardTests
     {
-        public const string POST_URL = "/Card";
+        public const string POST_URL = "/cards";
 
         [Fact]
         public async Task ShouldInsertValidCard()
@@ -62,6 +62,24 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
             string responseBody = await response.Content.ReadAsStringAsync();
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Equal(responseBody, ErrorMessages.INVALID_STATUS);
+        }
+
+        [Fact]
+        public async Task ShouldReturnBadRequestWhenDeadLineIsForPreviousDate()
+        {
+            // arrange
+            CardDTO cardDTO = new CardDTOBuilder().WithDeadLine(DateTime.Now.AddDays(-1)).Build();
+
+            await using var application = new SupercomTaskApplication();
+
+            // act
+            HttpContent content = new StringContent(JsonConvert.SerializeObject(cardDTO), Encoding.UTF8, "application/json");
+            using var client = application.CreateClient();
+            using var response = await client.PostAsync(POST_URL, content);
+
+            // assert
+            string responseBody = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         private void AssertEquals(CardDTO expected, CardDTO actual)
