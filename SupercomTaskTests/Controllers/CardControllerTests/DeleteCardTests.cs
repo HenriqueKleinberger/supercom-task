@@ -7,16 +7,16 @@ using SupercomTask.DTO;
 
 namespace SupercomTaskTests.Controllers.CardControllerTests
 {
-    public class GetAllCardTests
+    public class DeletelCardTests
     {
+        public const string DELETE = "/cards";
         public const string GET_ALL = "/cards";
 
         [Fact]
-        public async Task ShouldGetAllCards()
+        public async Task ShouldDeleteCard()
         {
             // arrange
-            Card card1;
-            Card card2;
+            Card cardToDelete;
 
             await using var application = new SupercomTaskApplication();
             using (var scope = application.Services.CreateScope())
@@ -26,22 +26,14 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
 
                 Status status = new StatusBuilder().Build();
 
-                card1 = new CardBuilder()
-                    .WithTitle("Get Title 1")
-                    .WithDescription("Get Description 1")
+                cardToDelete = new CardBuilder()
+                    .WithTitle("Delete Title 1")
+                    .WithDescription("Delete Description 1")
                     .WithDeadLine(new DateTime(2024, 1, 10))
                     .WithStatus(status)
                     .Build();
 
-                card2 = new CardBuilder()
-                    .WithTitle("Get Title 2")
-                    .WithDescription("Get Description 2")
-                    .WithDeadLine(new DateTime(2024, 1, 13))
-                    .WithStatus(status)
-                    .Build();
-
-                card1 = dbContext.Cards.Add(card1).Entity;
-                card2 = dbContext.Cards.Add(card2).Entity;
+                cardToDelete = dbContext.Cards.Add(cardToDelete).Entity;
 
                 dbContext.SaveChanges();
             }
@@ -49,15 +41,14 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
             // act
 
             using var client = application.CreateClient();
-            using var response = await client.GetAsync(GET_ALL);
+            using var deleteResponse = await client.DeleteAsync($"{DELETE}/{cardToDelete.CardId}");
+            using var getResponse = await client.GetAsync(GET_ALL);
 
             // assert
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+            string responseBody = await getResponse.Content.ReadAsStringAsync();
             List<CardDTO> cards = JsonConvert.DeserializeObject<List<CardDTO>>(responseBody);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(cards.Count, 2);
-            AssertEquals(card1, cards[0]);
-            AssertEquals(card2, cards[1]);
+            Assert.Equal(cards.Count, 0);
         }
 
         private void AssertEquals(Card expected, CardDTO actual)

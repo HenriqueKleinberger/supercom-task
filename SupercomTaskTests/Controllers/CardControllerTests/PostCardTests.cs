@@ -18,7 +18,7 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
         public async Task ShouldInsertValidCard()
         {
             // arrange
-            CardDTO cardDTO = new CardDTOBuilder().Build();
+            CardDTO cardDTO = new CardDTOBuilder().WithTitle("Post Title").Build();
 
             await using var application = new SupercomTaskApplication();
 

@@ -8,25 +8,17 @@ namespace SupercomTaskTests;
 
 internal class SupercomTaskApplication : WebApplicationFactory<Program>
 {
-    private readonly string _environment;
-
-    public SupercomTaskApplication(string environment = "Development")
-    {
-        _environment = environment;
-    }
+    private readonly string _dbName = Guid.NewGuid().ToString();
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        //builder.UseEnvironment(_environment);
-
-        // Add mock/test services to the builder here
         builder.ConfigureServices(services =>
         {
             services.AddScoped(sp =>
             {
                 // Replace SQLite with in-memory database for tests
                 return new DbContextOptionsBuilder<SuperComTaskContext>()
-                .UseInMemoryDatabase("Tests")
+                .UseInMemoryDatabase(_dbName)
                 .UseApplicationServiceProvider(sp)
                 .Options;
             });
