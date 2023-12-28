@@ -1,5 +1,4 @@
 ﻿using SupercomTask.DTO;
-using SupercomTask.Models;
 
 namespace SupercomTask.BLL.Interfaces
 {
@@ -9,5 +8,6 @@ namespace SupercomTask.BLL.Interfaces
         public Task<CardDTO> UpdateCard(CardDTO cardDTO, int cardId);
         public Task DeleteCard(int cardId);
         public Task<List<CardDTO>> GetCards();
+        public Task<List<CardDTO>> GetExpiredUndoneCards();
     }
 }

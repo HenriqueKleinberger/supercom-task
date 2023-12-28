@@ -10,5 +10,7 @@ namespace SupercomTask.DAL.Interfaces
         public Task DeleteCard(int cardId);
         public Task<Card?> GetCard(int cardId);
         public Task<List<Card>> GetCards();
+
+        Task<List<Card>> GetExpiredUndoneCards();
     }
 }

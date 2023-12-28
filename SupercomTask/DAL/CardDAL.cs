@@ -44,6 +44,15 @@ namespace SupercomTask.DAL
                 .ToListAsync();
         }
 
+        public async Task<List<Card>> GetExpiredUndoneCards()
+        {
+            return await _superComTaskContext.Cards
+                .Include(c => c.Status)
+                .Where(c => c.Deadline.Date <  DateTime.UtcNow.Date && c.Status.Name != "Done")
+                .OrderBy(c => c.CardId)
+                .ToListAsync();
+        }
+
         public async Task<Card> InsertCard(Card card)
         {
             EntityEntry<Card> entry = await _superComTaskContext.Cards.AddAsync(card);

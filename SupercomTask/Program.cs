@@ -13,6 +13,11 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddWindowsService(options =>
+{
+    options.ServiceName = "Send expirated tasks to queue";
+});
+
 builder.Services.AddControllers();
 builder.Services.AddMvc();
 
@@ -39,6 +44,7 @@ builder.Services.AddScoped<IStatusDAL, StatusDAL>();
 builder.Services.AddScoped<ICardBLL, CardBLL>();
 builder.Services.AddScoped<ITimeHelper, TimeHelper>();
 builder.Services.AddValidatorsFromAssemblyContaining<CardDTOValidator>();
+builder.Services.AddHostedService<SendExpiredTasksToQueueService>();
 
 var app = builder.Build();
 

@@ -62,6 +62,12 @@ namespace SupercomTask.BLL
             return cardUpdated.ToCardDTO();
         }
 
+        public async Task<List<CardDTO>> GetExpiredUndoneCards()
+        {
+            List<Card> cards = await _cardDAL.GetExpiredUndoneCards();
+            return cards.ConvertAll(c => c.ToCardDTO());
+        }
+
         private void ValidateStatus(Status? status)
         {
             
