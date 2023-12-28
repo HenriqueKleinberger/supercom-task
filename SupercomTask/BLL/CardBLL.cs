@@ -1,6 +1,5 @@
 ﻿using SupercomTask.BLL.Interfaces;
-using SupercomTask.Controllers;
-using SupercomTask.DAL;
+using SupercomTask.Constants;
 using SupercomTask.DAL.Interfaces;
 using SupercomTask.DTO;
 using SupercomTask.Exceptions;
@@ -25,14 +24,9 @@ namespace SupercomTask.BLL
             _statusDAL = statusDAL;
             _timeHelper = timeHelper;
         }
-        public Task DeleteCard(int cardId)
+        public async Task DeleteCard(int cardId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<CardDTO> GetCard(int cardId)
-        {
-            throw new NotImplementedException();
+            await _cardDAL.DeleteCard(cardId);
         }
 
         public async Task<List<CardDTO>> GetCards()
@@ -46,25 +40,52 @@ namespace SupercomTask.BLL
             Status status = await _statusDAL.GetStatusByName(cardDTO.Status);
             ValidateStatus(status);
             Card card = cardDTO.ToCard(status);
-
-            cardDTO.CreatedAt = _timeHelper.Now();
+            card.CreatedAt = _timeHelper.Now();
 
             Card insertedCard = await _cardDAL.InsertCard(card);
 
             return insertedCard.ToCardDTO();
         }
 
-        public Task<CardDTO> UpdateCard(CardDTO cardDTO, int cardId)
+        public async Task<CardDTO> UpdateCard(CardDTO cardDTO, int cardId)
         {
-            throw new NotImplementedException();
+            Status? status = await _statusDAL.GetStatusByName(cardDTO.Status);
+            ValidateStatus(status);
+            
+            Card? cardToUpdate = await _cardDAL.GetCard(cardId);
+            ValidateCard(cardToUpdate);
+            ValidateUpdateDeadline(cardToUpdate, cardDTO);
+            cardToUpdate.Status = status;
+            
+            Card cardUpdated = await _cardDAL.UpdateCard(cardToUpdate, cardDTO);
+
+            return cardUpdated.ToCardDTO();
         }
 
-        private void ValidateStatus(Status status)
+        private void ValidateStatus(Status? status)
         {
             
             if (status == null)
             {
-                throw new InvalidStatusException();
+                throw new ValidationException(ErrorMessages.INVALID_STATUS);
+            }
+        }
+
+        private void ValidateCard(Card? card)
+        {
+            if (card == null)
+            {
+                throw new ValidationException(ErrorMessages.CARD_NOT_FOUND);
+
+            }
+        }
+
+        private void ValidateUpdateDeadline(Card card, CardDTO cardDTO)
+        {
+            if (card.CreatedAt.Date > cardDTO.Deadline.Date)
+            {
+                throw new ValidationException(ErrorMessages.DEADLINE_VALIDATION);
+
             }
         }
     }

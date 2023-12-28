@@ -12,7 +12,7 @@ namespace SupercomTask.Mappers
             {
                 Id = card.CardId,
                 CreatedAt = card.CreatedAt,
-                DeadLine = card.DeadLine,
+                Deadline = card.Deadline,
                 Description = card.Description,
                 Title = card.Title,
                 Status = card.Status.Name

@@ -14,7 +14,7 @@ namespace SupercomTaskTests.Builders
         public CardBuilder()
         {
             _card = new Card();
-            _card.DeadLine = DateTime.Now;
+            _card.Deadline = DateTime.Now;
             _card.Status = new Status()
             {
                 Name = "To Do",
@@ -44,7 +44,7 @@ namespace SupercomTaskTests.Builders
 
         public CardBuilder WithDeadLine(DateTime deadline)
         {
-            _card.DeadLine = deadline;
+            _card.Deadline = deadline;
             return this;
         }
 

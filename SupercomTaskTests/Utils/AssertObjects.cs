@@ -8,7 +8,7 @@ namespace SupercomTaskTests.Utils
         {
             Assert.Equal(expected.Status, actual.Status);
             Assert.Equal(expected.Title, actual.Title);
-            Assert.True(DateTime.Equals(expected.DeadLine, actual.DeadLine));
+            Assert.True(DateTime.Equals(expected.Deadline, actual.Deadline));
             // AJUSTAR Assert.True(DateTime.Equals(expected.CreatedAt, actual.CreatedAt));
         }
     }

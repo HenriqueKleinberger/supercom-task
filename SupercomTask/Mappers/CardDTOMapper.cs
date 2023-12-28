@@ -11,7 +11,7 @@ namespace SupercomTask.Mappers
             Card card = new Card()
             {
                 CreatedAt = cardDTO.CreatedAt,
-                DeadLine = cardDTO.DeadLine,
+                Deadline = cardDTO.Deadline,
                 Description = cardDTO.Description,
                 Title = cardDTO.Title,
                 Status = status

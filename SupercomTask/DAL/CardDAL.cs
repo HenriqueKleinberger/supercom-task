@@ -2,6 +2,8 @@
 using SupercomTask.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
+using SupercomTask.DTO;
+using System.Net.NetworkInformation;
 
 namespace SupercomTask.DAL
 {
@@ -17,12 +19,21 @@ namespace SupercomTask.DAL
         }
         public async Task DeleteCard(int cardId)
         {
-            throw new NotImplementedException();
+            Card? cardToDelete = await _superComTaskContext.Cards.FindAsync(cardId);
+            if (cardToDelete != null)
+            {
+                _superComTaskContext.Cards.Remove(cardToDelete);
+                await _superComTaskContext.SaveChangesAsync();
+            }
         }
 
-        public async Task<Card> GetCard(int cardId)
+        public async Task<Card?> GetCard(int cardId)
         {
-            throw new NotImplementedException();
+            Card? card = await _superComTaskContext.Cards
+                .Include(c => c.Status)
+                .Where(c => c.CardId == cardId)
+                .FirstOrDefaultAsync();
+            return card;
         }
 
         public async Task<List<Card>> GetCards()
@@ -40,9 +51,14 @@ namespace SupercomTask.DAL
             return entry.Entity;
         }
 
-        public async Task<Card> UpdateCard(Card card, int cardId)
+        public async Task<Card> UpdateCard(Card card, CardDTO cardDTO)
         {
-            throw new NotImplementedException();
+            card.Title = cardDTO.Title;
+            card.Description = cardDTO.Description;
+            card.Deadline = cardDTO.Deadline;
+
+            await _superComTaskContext.SaveChangesAsync();
+            return card;
         }
     }
 }

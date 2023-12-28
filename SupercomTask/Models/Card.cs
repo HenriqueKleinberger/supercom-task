@@ -8,7 +8,7 @@
 
         public String Description { get; set; }
 
-        public DateTime DeadLine { get; set; }
+        public DateTime Deadline { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

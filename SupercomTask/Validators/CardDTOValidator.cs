@@ -8,9 +8,9 @@ namespace SupercomTask.Validators
     {
         public CardDTOValidator()
         {
-            RuleFor(x => x.Id).NotNull();
-            RuleFor(x => x.Title).NotNull();
-            RuleFor(x => x.DeadLine).Must(BeAValidDate).WithMessage(ErrorMessages.DEADLINE_VALIDATION);
+            RuleFor(x => x.Title).Must(x => x == null || x.Length >= 2);
+            RuleFor(x => x.Description).Must(x => x == null || x.Length >= 2);
+            RuleFor(x => x.Deadline).Must(BeAValidDate).WithMessage(ErrorMessages.DEADLINE_VALIDATION);
             RuleFor(x => x.Status).NotNull();
         }
 

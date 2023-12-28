@@ -48,12 +48,38 @@ namespace SupercomTask.Controllers
             try
             {
                 inserted = await _cardBLL.InsertCard(cardDTO);
-            } catch (InvalidStatusException ex)
+            } catch (Exceptions.ValidationException ex)
             {
-                return BadRequest(ex.Message);
+                return base.BadRequest(ex.Message);
             }
 
             return CreatedAtAction(nameof(CardDTO), inserted);
+        }
+
+        [HttpPut("{cardId}", Name = "PutCard")]
+        [ActionName(nameof(CardDTO))]
+        public async Task<ActionResult<CardDTO>> Put(int cardId, [FromBody] CardDTO cardDTO)
+        {
+            CardDTO updated;
+
+            try
+            {
+                updated = await _cardBLL.UpdateCard(cardDTO, cardId);
+            }
+            catch (Exceptions.ValidationException ex)
+            {
+                return base.BadRequest(ex.Message);
+            }
+
+            return Ok(updated);
+        }
+
+        [HttpDelete("{cardId}", Name = "DeleteCard")]
+        [ActionName(nameof(CardDTO))]
+        public async Task<ActionResult<CardDTO>> Delete(int cardId)
+        {
+            await _cardBLL.DeleteCard(cardId);
+            return NoContent();
         }
     }
 }

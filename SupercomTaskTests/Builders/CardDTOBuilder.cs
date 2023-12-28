@@ -10,7 +10,7 @@ namespace SupercomTaskTests.Builders
         public CardDTOBuilder()
         {
             _cardDTO = new CardDTO();
-            _cardDTO.DeadLine = DateTime.Now;
+            _cardDTO.Deadline = DateTime.Now;
             _cardDTO.Status = "To Do";
             _cardDTO.CreatedAt = DateTime.Now;
             _cardDTO.Description = "Card Description";
@@ -37,7 +37,7 @@ namespace SupercomTaskTests.Builders
 
         public CardDTOBuilder WithDeadLine(DateTime deadline)
         {
-            _cardDTO.DeadLine = deadline;
+            _cardDTO.Deadline = deadline;
             return this;
         }
 

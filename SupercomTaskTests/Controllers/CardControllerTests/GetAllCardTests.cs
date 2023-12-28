@@ -65,7 +65,7 @@ namespace SupercomTaskTests.Controllers.CardControllerTests
             Assert.Equal(expected.CardId, actual.Id);
             Assert.Equal(expected.Status.Name, actual.Status);
             Assert.Equal(expected.Title, actual.Title);
-            Assert.True(DateTime.Equals(expected.DeadLine, actual.DeadLine));
+            Assert.True(DateTime.Equals(expected.Deadline, actual.Deadline));
             Assert.True(DateTime.Equals(expected.CreatedAt, actual.CreatedAt));
         }
     }

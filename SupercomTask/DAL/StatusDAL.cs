@@ -21,7 +21,7 @@ namespace SupercomTask.DAL
             return status;
         }
 
-        public async Task<Status> GetStatusByName(string name)
+        public async Task<Status?> GetStatusByName(string name)
         {
             Status? status = await _superComTaskContext.Status.Where(s => s.Name == name).FirstOrDefaultAsync();
             return status;
