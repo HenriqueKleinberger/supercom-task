@@ -51,7 +51,6 @@ The application follows a layered architecture for organizing code:
       // ...
     }
     ```
-3. Create a database named SuperComTask in your localdb
 
 ## Run the Application with IIS Express
 
