@@ -8,6 +8,8 @@ using SupercomTask.Utils.Time.Interfaces;
 using SupercomTask.Utils.Time;
 using FluentValidation;
 using SupercomTask.Validators;
+using Microsoft.AspNetCore.Connections;
+using RabbitMQ.Client;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -31,6 +33,19 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                       });
+});
+
+builder.Services.AddScoped<IConnection>(provider =>
+{
+    var factory = new ConnectionFactory
+    {
+        HostName = "localhost",
+        Port = 5672,
+        UserName = "guest",
+        Password = "guest",
+    };
+
+    return factory.CreateConnection();
 });
 
 builder.Services.AddEndpointsApiExplorer();
