@@ -7,22 +7,32 @@ using SupercomTask.Models;
 using SupercomTask.Utils.Time.Interfaces;
 using SupercomTask.Utils.Time;
 using FluentValidation;
-using System;
-using SupercomTask.DTO;
 using SupercomTask.Validators;
-using FluentValidation.AspNetCore;
+
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddMvc();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy
+                          .WithOrigins("http://localhost:3000")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                      });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<SuperComTaskContext>(options => options.UseSqlServer(
-    builder.Configuration.GetConnectionString("DefaultConnection")
-));
+builder.Services.AddDbContext<SuperComTaskContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 builder.Services.AddScoped<ICardDAL, CardDAL>();
 builder.Services.AddScoped<IStatusDAL, StatusDAL>();
@@ -42,6 +52,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
-
+app.UseCors(MyAllowSpecificOrigins);
 app.Run();
 public partial class Program { }
