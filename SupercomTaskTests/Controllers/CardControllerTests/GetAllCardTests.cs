@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using SupercomTask.Models;
-using System.Net;
-using SupercomTaskTests.Builders;
 using Newtonsoft.Json;
 using SupercomTask.DTO;
+using SupercomTask.Models;
+using SupercomTaskTests.Builders;
+using System.Net;
 
 namespace SupercomTaskTests.Controllers.CardControllerTests
 {
