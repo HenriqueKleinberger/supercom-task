@@ -8,6 +8,8 @@
 
 3. Install [MSSQL LocalDB](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15) on your machine.
 
+4. **RabbitMQ:** Ensure RabbitMQ is installed and running locally. You can download it [here](https://www.rabbitmq.com/download.html).
+
 ## Application Architecture Overview
 
 ### Entity Framework and Database Access
@@ -51,6 +53,29 @@ The application follows a layered architecture for organizing code:
       // ...
     }
     ```
+	
+### RabbitMQ Setup
+
+Ensure RabbitMQ is running locally before starting the application.
+
+1. Download and install RabbitMQ from [here](https://www.rabbitmq.com/download.html).
+
+2. Start RabbitMQ server.
+
+### Configuration
+
+Configure RabbitMQ connection settings in `appsettings.json`:
+
+```json
+{
+  "RabbitMqConfiguration": {
+    "HostName": "localhost",
+    "UserName": "guest",
+    "Password": "guest",
+    "QueueName": "expired_cards"
+  },
+  // ...
+}
 
 ## Run the Application with IIS Express
 
@@ -79,3 +104,11 @@ The application follows a layered architecture for organizing code:
 ## Additional Notes
 
 - If you encounter any issues connecting to LocalDB, ensure that LocalDB is installed and running. You can check this using SQL Server Object Explorer in Visual Studio.
+
+## SupercomTask RabbitMQ Services
+
+1. **RabbitMQServices:** Abstract class managing RabbitMQ connections.
+
+2. **SendExpiredTasksToQueueService:** Sends expired tasks to RabbitMQ periodically.
+
+3. **LogExpiredTasks:** Consumes messages from RabbitMQ, verifies idempotency by checking the database, and logs unprocessed expired tasks.
