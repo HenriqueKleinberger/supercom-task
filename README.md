@@ -76,6 +76,7 @@ Configure RabbitMQ connection settings in `appsettings.json`:
   },
   // ...
 }
+```
 
 ## Run the Application with IIS Express
 
