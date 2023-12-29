@@ -1,19 +1,17 @@
 ﻿using Newtonsoft.Json;
 using RabbitMQ.Client;
 using SupercomTask.BLL.Interfaces;
+using SupercomTask.Config;
 using SupercomTask.DTO;
-using SupercomTask.Models;
 using System.Text;
 
-public sealed class SendExpiredTasksToQueueService : BackgroundService
+public sealed class SendExpiredTasksToQueueService : RabbitMQServices
 {
     private readonly ILogger<SendExpiredTasksToQueueService> _logger;
-    private readonly IServiceProvider _serviceProvider;
 
-    public SendExpiredTasksToQueueService(ILogger<SendExpiredTasksToQueueService> logger, IServiceProvider serviceProvider)
+    public SendExpiredTasksToQueueService(RabbitMqConfiguration rabbitMqConfiguration, ILogger<SendExpiredTasksToQueueService> logger, IServiceProvider serviceProvider) : base(rabbitMqConfiguration, serviceProvider)
     {
         _logger = logger;
-        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,7 +28,7 @@ public sealed class SendExpiredTasksToQueueService : BackgroundService
                     PublishMessageToRabbitMQ(cards);
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
         catch (Exception ex)
@@ -43,32 +41,21 @@ public sealed class SendExpiredTasksToQueueService : BackgroundService
     {
         try
         {
-            using (var scope = _serviceProvider.CreateScope())
+            _channel.QueueDeclare(_rabbitMqConfiguration.QueueName, durable: true, false, false, null);
+
+            foreach (var card in cards)
             {
-                var rabbitMqConnection = scope.ServiceProvider.GetRequiredService<IConnection>();
+                var messageBody = JsonConvert.SerializeObject(card);
+                var properties = _channel.CreateBasicProperties();
+                properties.MessageId = card.Id.ToString();
+                _channel.BasicPublish("", _rabbitMqConfiguration.QueueName, properties, Encoding.UTF8.GetBytes(messageBody));
 
-                using (var channel = rabbitMqConnection.CreateModel())
-                {
-                    channel.QueueDeclare("expired_cards", durable: true, false, false, null);
-
-                    foreach (var card in cards)
-                    {
-                        var messageBody = JsonConvert.SerializeObject(card);
-                        var properties = channel.CreateBasicProperties();
-                        properties.MessageId = card.Id.ToString();
-
-                        // Publish the message to the queue
-                        channel.BasicPublish("", "expired_cards", properties, Encoding.UTF8.GetBytes(messageBody));
-
-                        _logger.LogInformation($"Message published to RabbitMQ: {messageBody}");
-                    }
-                }
+                _logger.LogInformation($"Message published to RabbitMQ: {messageBody}");
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error publishing message to RabbitMQ");
-            // Log or handle the exception as needed
         }
     }
 }

@@ -3,7 +3,7 @@ using SupercomTask.Models;
 
 namespace SupercomTask.DAL.Interfaces
 {
-    public interface ICardDAL
+    public interface ICardDAL : IBaseDAL
     {
         public Task<Card> InsertCard(Card card);
         public Task<Card> UpdateCard(Card card, CardDTO cardDTO);

@@ -3,20 +3,19 @@ using SupercomTask.Models;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
 using SupercomTask.DTO;
-using System.Net.NetworkInformation;
 
 namespace SupercomTask.DAL
 {
-    public class CardDAL : ICardDAL
+    public class CardDAL : BaseDAL, ICardDAL
     {
         private readonly ILogger<CardDAL> _logger;
-        private readonly SuperComTaskContext _superComTaskContext;
 
-        public CardDAL(ILogger<CardDAL> logger, SuperComTaskContext superComTaskContext)
+        public CardDAL(SuperComTaskContext superComTaskContext, ILogger<CardDAL> logger)
+            : base(superComTaskContext)
         {
             _logger = logger;
-            _superComTaskContext = superComTaskContext;
         }
+
         public async Task DeleteCard(int cardId)
         {
             Card? cardToDelete = await _superComTaskContext.Cards.FindAsync(cardId);
@@ -48,7 +47,7 @@ namespace SupercomTask.DAL
         {
             return await _superComTaskContext.Cards
                 .Include(c => c.Status)
-                .Where(c => c.Deadline.Date <  DateTime.UtcNow.Date && c.Status.Name != "Done")
+                .Where(c => c.Deadline.Date < DateTime.UtcNow.Date && c.Status.Name != "Done")
                 .OrderBy(c => c.CardId)
                 .ToListAsync();
         }
